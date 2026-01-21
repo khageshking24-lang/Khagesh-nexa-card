@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Khagesh AI Nexa | Digital Agency</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        body { background: #020617; color: white; font-family: 'Segoe UI', sans-serif; }
+        .glass-card { background: rgba(255, 255, 255, 0.03); backdrop-filter: blur(15px); border: 1px solid rgba(255,255,255,0.1); border-radius: 30px; }
+        .gold-gradient { background: linear-gradient(45deg, #fbbf24, #f59e0b); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        .btn-call { background: #2563eb; }
+        .btn-wa { background: #22c55e; }
+        .btn-mail { background: #ea4335; }
+        .price-tag { color: #fbbf24; font-weight: bold; font-size: 11px; }
+    </style>
+</head>
+<body class="p-4 flex flex-col items-center min-h-screen">
+
+    <div class="glass-card w-full max-w-sm p-6 text-center shadow-2xl mt-4">
+        <div id="clock" class="text-[10px] font-mono text-amber-500 mb-4 tracking-widest opacity-80">00:00:00 AM</div>
+
+        <div class="w-16 h-16 bg-amber-500 rounded-2xl flex items-center justify-center mx-auto mb-3 shadow-lg shadow-amber-500/30">
+            <i class="fas fa-bolt text-2xl text-white"></i>
+        </div>
+
+        <h1 class="text-2xl font-black tracking-tight mb-1 uppercase">KHAGESH <span class="gold-gradient">AI NEXA</span></h1>
+        <p class="text-[9px] text-gray-500 tracking-[3px] uppercase font-bold mb-6">Software & Digital Hub | Delhi</p>
+
+        <div class="space-y-3 text-left mb-6">
+            <div class="bg-white/5 p-3 rounded-xl flex items-center justify-between">
+                <span class="text-sm"><i class="fas fa-code text-blue-400 mr-2"></i> Web Apps</span>
+                <span class="price-tag">₹999+</span>
+            </div>
+            <div class="bg-white/5 p-3 rounded-xl flex items-center justify-between">
+                <span class="text-sm"><i class="fas fa-id-card text-emerald-400 mr-2"></i> ABHA / PAN Card</span>
+                <span class="price-tag">₹49+</span>
+            </div>
+            <div class="bg-white/5 p-3 rounded-xl flex items-center justify-between">
+                <span class="text-sm"><i class="fas fa-image text-pink-400 mr-2"></i> Poster/Social Post</span>
+                <span class="price-tag">₹99+</span>
+            </div>
+        </div>
+
+        <div class="grid grid-cols-2 gap-3 mb-3">
+            <a href="tel:8882737014" class="btn-call py-3 rounded-xl font-bold flex items-center justify-center gap-2 text-sm">
+                <i class="fas fa-phone-alt"></i> Call
+            </a>
+            <a href="https://wa.me/918882737014" class="btn-wa py-3 rounded-xl font-bold flex items-center justify-center gap-2 text-sm">
+                <i class="fab fa-whatsapp"></i> WhatsApp
+            </a>
+        </div>
+        <a href="mailto:YOUR_EMAIL@gmail.com" class="btn-mail w-full py-3 rounded-xl font-bold flex items-center justify-center gap-2 text-sm mb-6">
+            <i class="fas fa-envelope"></i> Send Email
+        </a>
+
+        <div class="border-t border-white/10 pt-4">
+            <p class="text-[10px] text-gray-500 font-bold uppercase mb-3">Sample Projects</p>
+            <div class="space-y-2">
+                <a href="YOUR_KHATA_APP_LINK" class="block w-full py-2 bg-white/5 hover:bg-white/10 rounded-lg text-xs font-medium">1. Digital Khata App</a>
+                <a href="YOUR_OPTICAL_APP_LINK" class="block w-full py-2 bg-white/5 hover:bg-white/10 rounded-lg text-xs font-medium">2. Optical Pro Eye-Test App</a>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function updateClock() {
+            const now = new Date();
+            document.getElementById('clock').innerText = now.toLocaleTimeString();
+        }
+        setInterval(updateClock, 1000);
+        updateClock();
+    </script>
+</body>
+</html>
