@@ -3,79 +3,88 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Nexa BizMaster | Powered by Khagesh ai-nexa</title>
+    <title>Nexa BizMaster | Khagesh ai-nexa</title>
     <script src="https://cdn.jsdelivr.net/npm/jspdf@2.5.1/dist/jspdf.umd.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/jspdf-autotable@3.5.23/dist/jspdf.plugin.autotable.min.js"></script>
     <style>
         :root { --p: #0ea5e9; --bg: #0f172a; --card: #1e293b; --text: #f1f5f9; --border: #334155; }
         [data-theme="light"] { --bg: #f8fafc; --card: #ffffff; --text: #1e293b; --border: #e2e8f0; }
-        * { box-sizing: border-box; font-family: 'Segoe UI', system-ui; margin: 0; padding: 0; transition: 0.2s; }
-        body { background: var(--bg); color: var(--text); padding: 10px; padding-bottom: 85px; }
-        .ceo-header { text-align: center; margin-bottom: 15px; padding: 20px; border-radius: 20px; background: linear-gradient(135deg, #0ea5e9, #38bdf8); color: white; position: relative; box-shadow: 0 10px 25px rgba(0,0,0,0.2); }
-        .theme-toggle { position: absolute; top: 10px; right: 15px; font-size: 20px; cursor: pointer; }
-        .ceo-name { font-size: 22px; font-weight: 800; border: none; background: transparent; color: white; text-align: center; width: 100%; outline: none; text-transform: uppercase; letter-spacing: 1px; }
-        .ceo-addr { font-size: 11px; opacity: 0.9; border: none; background: transparent; color: white; text-align: center; width: 100%; outline: none; margin-top: 5px; }
-        .glass-card { background: var(--card); border: 1px solid var(--border); border-radius: 18px; padding: 18px; margin-bottom: 15px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); }
+        * { box-sizing: border-box; font-family: 'Segoe UI', sans-serif; margin: 0; padding: 0; }
+        body { background: var(--bg); color: var(--text); padding-bottom: 85px; overflow-x: hidden; }
+        
+        /* Trial Overlay */
+        #lock { position: fixed; inset: 0; background: #0f172a; z-index: 9999; display: none; flex-direction: column; align-items: center; justify-content: center; text-align: center; padding: 20px; }
+        .lock-card { background: #1e293b; padding: 30px; border-radius: 20px; border: 1px solid #ef4444; max-width: 90%; }
+
+        .ceo-header { text-align: center; padding: 20px; background: linear-gradient(135deg, #0ea5e9, #38bdf8); color: white; position: relative; }
+        .ceo-name { font-size: 22px; font-weight: 800; border: none; background: transparent; color: white; text-align: center; width: 100%; outline: none; text-transform: uppercase; }
+        .ceo-addr { font-size: 11px; opacity: 0.9; border: none; background: transparent; color: white; text-align: center; width: 100%; outline: none; }
+        
+        .glass-card { background: var(--card); border: 1px solid var(--border); border-radius: 18px; padding: 18px; margin: 10px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); }
         .prog-bg { background: rgba(255,255,255,0.1); height: 10px; border-radius: 5px; margin: 10px 0; overflow: hidden; }
-        .prog-fill { background: var(--p); height: 100%; width: 0%; border-radius: 5px; box-shadow: 0 0 10px var(--p); }
+        .prog-fill { background: var(--p); height: 100%; width: 0%; border-radius: 5px; }
+
         .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
         .full { grid-column: span 2; }
-        input, select { width: 100%; padding: 12px; border: 1px solid var(--border); border-radius: 10px; font-size: 14px; background: var(--card); color: var(--text); outline: none; }
-        .main-btn { width: 100%; background: var(--p); color: white; border: none; padding: 15px; border-radius: 12px; font-weight: bold; cursor: pointer; margin-top: 10px; box-shadow: 0 5px 15px rgba(14,165,233,0.3); }
-        .wa-btn { background: #25d366; color: white; border: none; padding: 6px 12px; border-radius: 8px; font-size: 11px; font-weight: bold; margin-top: 5px; cursor: pointer; }
-        .bill-btn { background: #6366f1; color: white; border: none; padding: 6px 12px; border-radius: 8px; font-size: 11px; font-weight: bold; margin-top: 5px; cursor: pointer; }
-        .tab-bar { position: fixed; bottom: 0; left: 0; width: 100%; background: var(--card); display: flex; border-top: 1px solid var(--border); height: 70px; z-index: 1000; }
-        .tab { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; font-size: 11px; font-weight: 700; color: #94a3b8; }
-        .tab.active { color: var(--p); border-top: 3px solid var(--p); background: rgba(14,165,233,0.05); }
-        .panel { display: none; }
+        input, select { width: 100%; padding: 12px; border: 1px solid var(--border); border-radius: 10px; background: var(--card); color: var(--text); outline: none; }
+        
+        .main-btn { width: 100%; background: var(--p); color: white; border: none; padding: 15px; border-radius: 12px; font-weight: bold; margin-top: 10px; }
+        .tab-bar { position: fixed; bottom: 0; width: 100%; background: var(--card); display: flex; border-top: 1px solid var(--border); height: 70px; }
+        .tab { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; font-size: 11px; color: #94a3b8; }
+        .tab.active { color: var(--p); border-top: 3px solid var(--p); }
+        .panel { display: none; padding: 5px; }
         .panel.active { display: block; }
-        .ledger-item { display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--border); padding: 15px 0; }
-        .stat-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 15px; }
-        .stat-card { padding: 10px; border-radius: 12px; text-align: center; background: rgba(14,165,233,0.1); border: 1px solid var(--border); }
+        .ledger-item { display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--border); padding: 12px 0; }
+        .wa-btn { background: #25d366; color: white; border: none; padding: 6px 10px; border-radius: 5px; font-size: 10px; margin-top: 4px; }
     </style>
 </head>
 <body data-theme="dark">
 
-<div class="ceo-header">
-    <div class="theme-toggle" onclick="toggleTheme()">🌓</div>
-    <div style="font-size: 10px; font-weight: bold; opacity: 0.8; margin-bottom: 5px;">NEXA BIZMASTER</div>
-    <input type="text" id="fName" class="ceo-name" placeholder="BUSINESS NAME" oninput="saveC()">
-    <input type="text" id="fAddr" class="ceo-addr" placeholder="Business Address & Contact" oninput="saveC()">
+<div id="lock">
+    <div class="lock-card">
+        <h2 style="color:#ef4444">Trial Expired! ❌</h2>
+        <p style="margin: 15px 0; font-size: 14px; opacity: 0.8;">Aapka 7-din ka trial khatam ho chuka hai ya system clock ke saath chhed-chhad hui hai. Please activate karein.</p>
+        <input type="password" id="mKey" placeholder="Enter Activation Key" style="margin-bottom:15px; text-align:center;">
+        <button onclick="activate()" class="main-btn" style="background:#16a34a">ACTIVATE NOW</button>
+        <p style="margin-top:20px; font-size:11px;">Powered by Khagesh ai-nexa</p>
+    </div>
 </div>
 
-<div style="display:flex; gap:10px; margin-bottom:15px;">
-    <button onclick="document.getElementById('imp').click()" style="flex:1; padding:12px; border-radius:12px; border:1px solid var(--border); background:var(--card); color:var(--text); font-weight:bold;">📥 Import</button>
-    <button onclick="forceExport()" id="exportBtn" style="flex:1; padding:12px; border-radius:12px; border:none; background:#0f172a; color:white; font-weight:bold;">📄 Audit Report</button>
+<div class="ceo-header">
+    <div onclick="toggleTheme()" style="position:absolute; right:15px; top:10px; cursor:pointer;">🌓</div>
+    <div style="font-size: 9px; font-weight: bold; opacity: 0.8;">NEXA BIZMASTER PRO</div>
+    <input type="text" id="fName" class="ceo-name" oninput="saveC()">
+    <input type="text" id="fAddr" class="ceo-addr" oninput="saveC()">
+</div>
+
+<div style="display:flex; gap:10px; padding:10px;">
+    <button onclick="document.getElementById('imp').click()" style="flex:1; padding:10px; border-radius:10px; border:1px solid var(--border); background:var(--card); color:var(--text); font-size:12px;">📥 Import</button>
+    <button onclick="forceExport()" style="flex:1; padding:10px; border-radius:10px; background:#0f172a; color:white; font-size:12px; font-weight:bold;">📄 Audit Report</button>
     <input type="file" id="imp" hidden onchange="importData(event)">
 </div>
 
 <div id="Home" class="panel active">
     <div class="glass-card">
-        <div style="display:flex; justify-content: space-between;">
-            <span>Revenue Target</span>
+        <div style="display:flex; justify-content: space-between; font-size: 13px;">
+            <span>Sales Goal</span>
             <span id="pVal" style="color:var(--p)">0%</span>
         </div>
         <div class="prog-bg"><div id="pBar" class="prog-fill"></div></div>
-        <div style="display:flex; justify-content: space-between; font-size: 12px;">
-            <span>Paid: <b id="currEarned">₹0</b></span>
-            <span onclick="setG()" style="cursor:pointer; color:var(--p)">Goal: <b id="gVal">₹0</b> ⚙️</span>
+        <div style="display:flex; justify-content: space-between; font-size: 11px;">
+            <span>Earned: <b id="currEarned">₹0</b></span>
+            <span onclick="setG()" style="cursor:pointer; color:var(--p)">Target: <b id="gVal">₹0</b></span>
         </div>
     </div>
 
     <div class="glass-card">
-        <h4 style="margin-bottom:12px; color:var(--p)">New Sale Entry</h4>
+        <h4 style="margin-bottom:10px; font-size:14px; color:var(--p)">New Entry</h4>
         <div class="form-grid">
             <input type="hidden" id="editId">
             <input type="text" id="cName" placeholder="Client Name" class="full">
-            <input type="text" id="cLoc" placeholder="Client Location">
-            <input type="text" id="cApp" placeholder="Product/Service Name">
-            <input type="tel" id="cPhone" value="+91" placeholder="WhatsApp Number">
+            <input type="text" id="cApp" placeholder="Product/Service" class="full">
             <input type="number" id="cAmt" placeholder="Amount (₹)">
             <input type="date" id="cDate">
-            <select id="cStatus" class="full">
-                <option value="Paid">Paid</option>
-                <option value="Pending">Pending</option>
-            </select>
+            <select id="cStatus" class="full"><option value="Paid">Paid</option><option value="Pending">Pending</option></select>
             <button id="addBtn" class="main-btn full" onclick="save()">SAVE RECORD 🚀</button>
         </div>
     </div>
@@ -83,27 +92,14 @@
 
 <div id="Ledger" class="panel">
     <div class="glass-card">
-        <input type="text" id="search" placeholder="Search by name or product..." oninput="render()" style="width:100%; padding:12px; border-radius:12px; border:1px solid var(--border); margin-bottom:10px;">
+        <input type="text" id="search" placeholder="Search..." oninput="render()" style="margin-bottom:10px;">
         <div id="list"></div>
     </div>
 </div>
 
 <div id="Billing" class="panel">
     <div class="glass-card">
-        <h4 style="margin-bottom:10px;">Monthly Billing Center</h4>
-        <select id="monthFilter" onchange="renderBilling()" style="margin-bottom:15px; width:100%;">
-            <option value="all">View All Time</option>
-            <option value="01">January</option><option value="02">February</option>
-            <option value="03">March</option><option value="04">April</option>
-            <option value="05">May</option><option value="06">June</option>
-            <option value="07">July</option><option value="08">August</option>
-            <option value="09">September</option><option value="10">October</option>
-            <option value="11">November</option><option value="12">December</option>
-        </select>
-        <div class="stat-grid">
-            <div class="stat-card"><small>Received</small><br><b id="mPaid" style="color:#16a34a">₹0</b></div>
-            <div class="stat-card"><small>Outstanding</small><br><b id="mPend" style="color:#ef4444">₹0</b></div>
-        </div>
+        <h4 style="margin-bottom:10px;">Billing Center</h4>
         <div id="billList"></div>
     </div>
 </div>
@@ -111,31 +107,53 @@
 <div class="tab-bar">
     <div class="tab active" onclick="tab('Home', this)">🏠 HOME</div>
     <div class="tab" onclick="tab('Ledger', this)">📑 LEDGER</div>
-    <div class="tab" onclick="tab('Billing', this)">🧾 BILLING</div>
+    <div class="tab" onclick="tab('Billing', this)">🧾 BILLS</div>
 </div>
 
 <script>
-    let db, allData = [], goal = localStorage.getItem('nGoal') || 50000;
-    
-    // CEO & Theme Setup
-    document.getElementById('fName').value = localStorage.getItem('cN') || "KHAGESH AI-NEXA";
-    document.getElementById('fAddr').value = localStorage.getItem('cA') || "Delhi, India | 8882737014";
-    function saveC(){ localStorage.setItem('cN', document.getElementById('fName').value); localStorage.setItem('cA', document.getElementById('fAddr').value); }
-    if(localStorage.getItem('theme') === 'light') document.body.setAttribute('data-theme', 'light');
-    function toggleTheme() {
-        const mode = document.body.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
-        document.body.setAttribute('data-theme', mode);
-        localStorage.setItem('theme', mode);
+    // --- TRIAL SYSTEM LOGIC ---
+    const CONFIG = {
+        trialDays: 7,
+        trialStartDate: "2026-02-16", // Change for new clients
+        masterKey: "Permanentkey63793119"
+    };
+
+    function checkTrial() {
+        if(localStorage.getItem('biz_active') === 'true') return;
+        
+        const start = new Date(CONFIG.trialStartDate);
+        const today = new Date();
+        const diff = Math.ceil((today - start) / (1000 * 60 * 60 * 24));
+        
+        // Anti-Tamper: Last login check
+        const lastLogin = localStorage.getItem('last_login') || CONFIG.trialStartDate;
+        if(new Date(lastLogin) > today || diff > CONFIG.trialDays || diff < 0) {
+            document.getElementById('lock').style.display = 'flex';
+        }
+        localStorage.setItem('last_login', today.toISOString());
     }
 
-    // DB Init (Nexa BizMaster Core)
-    const req = indexedDB.open("Nexa_BizMaster_Permanent", 1);
+    function activate() {
+        if(document.getElementById('mKey').value === CONFIG.masterKey) {
+            localStorage.setItem('biz_active', 'true');
+            document.getElementById('lock').style.display = 'none';
+            alert("Nexa BizMaster Activated Lifetime! 🏆");
+        } else { alert("Invalid Key!"); }
+    }
+
+    // --- CORE APP LOGIC ---
+    let db, allData = [], goal = localStorage.getItem('biz_goal') || 50000;
+    
+    document.getElementById('fName').value = localStorage.getItem('cN') || "KHAGESH AI-NEXA";
+    document.getElementById('fAddr').value = localStorage.getItem('cA') || "8882737014 | Delhi";
+    function saveC(){ localStorage.setItem('cN', document.getElementById('fName').value); localStorage.setItem('cA', document.getElementById('fAddr').value); }
+
+    const req = indexedDB.open("NexaBizMaster_DB", 1);
     req.onupgradeneeded = e => e.target.result.createObjectStore("sales", {keyPath:"id", autoIncrement:true});
-    req.onsuccess = e => { db = e.target.result; load(); };
+    req.onsuccess = e => { db = e.target.result; load(); checkTrial(); };
 
     function tab(id, el) {
-        document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
-        document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+        document.querySelectorAll('.panel, .tab').forEach(x => x.classList.remove('active'));
         document.getElementById(id).classList.add('active');
         el.classList.add('active');
         if(id === 'Billing') renderBilling();
@@ -145,17 +163,14 @@
         const id = document.getElementById('editId').value;
         const data = {
             name: document.getElementById('cName').value,
-            addr: document.getElementById('cLoc').value,
-            app: document.getElementById('cApp').value || 'Service',
-            phone: document.getElementById('cPhone').value,
+            app: document.getElementById('cApp').value,
             amt: parseFloat(document.getElementById('cAmt').value) || 0,
             date: document.getElementById('cDate').value,
             status: document.getElementById('cStatus').value
         };
-        if(!data.name) return alert("Please enter Client Name");
+        if(!data.name) return;
         const tx = db.transaction("sales", "readwrite");
-        if(id) { data.id = parseInt(id); tx.objectStore("sales").put(data); } 
-        else { tx.objectStore("sales").add(data); }
+        id ? (data.id = parseInt(id), tx.objectStore("sales").put(data)) : tx.objectStore("sales").add(data);
         tx.oncomplete = () => { load(); reset(); };
     }
 
@@ -170,139 +185,79 @@
         let p = 0; allData.forEach(i => { if(i.status === 'Paid') p += i.amt; });
         document.getElementById('gVal').innerText = `₹${goal}`;
         document.getElementById('currEarned').innerText = `₹${p}`;
-        let perc = Math.min((p / goal) * 100, 100).toFixed(1);
-        document.getElementById('pBar').style.width = perc + "%";
-        document.getElementById('pVal').innerText = perc + "%";
+        document.getElementById('pBar').style.width = Math.min((p/goal)*100, 100) + "%";
+        document.getElementById('pVal').innerText = Math.min((p/goal)*100, 100).toFixed(1) + "%";
     }
 
     function render() {
-        const q = document.getElementById('search').value.toLowerCase();
-        const list = document.getElementById('list');
-        list.innerHTML = "";
-        allData.filter(i => i.name.toLowerCase().includes(q) || i.app.toLowerCase().includes(q)).forEach(i => {
-            const div = document.createElement('div');
-            div.className = "ledger-item";
-            div.innerHTML = `<div><b>${i.name}</b><br><small style="opacity:0.6">${i.app} | ${i.date}</small></div>
-                <div style="text-align:right"><span style="color:${i.status==='Paid'?'#16a34a':'#d97706'}; font-weight:800;">₹${i.amt}</span><br>
-                <button style="border:none;background:none;color:var(--p);font-size:11px" onclick="edit(${i.id})">Edit</button> | 
-                <button style="border:none;background:none;color:red;font-size:11px" onclick="del(${i.id})">Del</button></div>`;
-            list.appendChild(div);
+        const list = document.getElementById('list'); list.innerHTML = "";
+        allData.forEach(i => {
+            list.innerHTML += `<div class="ledger-item">
+                <div><b>${i.name}</b><br><small>${i.app}</small></div>
+                <div style="text-align:right"><b>₹${i.amt}</b><br>
+                <small onclick="edit(${i.id})" style="color:var(--p)">Edit</small></div></div>`;
         });
     }
 
     function renderBilling() {
-        const m = document.getElementById('monthFilter').value;
-        const list = document.getElementById('billList');
-        let p = 0, d = 0;
-        list.innerHTML = "";
-        allData.filter(i => m === 'all' || i.date.split('-')[1] === m).forEach(i => {
-            if(i.status === 'Paid') p += i.amt; else d += i.amt;
-            const div = document.createElement('div');
-            div.className = "ledger-item";
-            div.innerHTML = `<div><b>${i.name}</b><br><small>${i.app} | ${i.date}</small></div>
-                <div style="text-align:right"><button class="bill-btn" onclick="genInvoice(${i.id})">📄 Invoice</button><br>
-                <button class="wa-btn" onclick="wa(${i.id})">💬 Share</button></div>`;
-            list.appendChild(div);
+        const list = document.getElementById('billList'); list.innerHTML = "";
+        allData.forEach(i => {
+            list.innerHTML += `<div class="ledger-item">
+                <div><b>${i.name}</b><br><small>${i.date}</small></div>
+                <div style="text-align:right">
+                    <button class="wa-btn" style="background:#6366f1" onclick="genInvoice(${i.id})">PDF Bill</button>
+                </div></div>`;
         });
-        document.getElementById('mPaid').innerText = `₹${p}`;
-        document.getElementById('mPend').innerText = `₹${d}`;
-    }
-
-    function wa(id) {
-        const i = allData.find(x => x.id === id);
-        const msg = `*Invoice from ${document.getElementById('fName').value}*\nHello ${i.name}, your bill for ${i.app} is ₹${i.amt}.\nStatus: ${i.status}\nThank you!`;
-        window.open(`https://wa.me/${i.phone.replace('+','')}/?text=${encodeURIComponent(msg)}`);
     }
 
     async function forceExport() {
-        const { jsPDF } = window.jspdf;
-        const doc = new jsPDF();
-        const fN = document.getElementById('fName').value;
-        const fA = document.getElementById('fAddr').value;
-
-        doc.setFillColor(15, 23, 42); doc.rect(0, 0, 210, 35, 'F');
-        doc.setTextColor(255); doc.setFontSize(20); doc.text(fN, 14, 18);
-        doc.setFontSize(9); doc.text(fA, 14, 26);
-        doc.setFontSize(12); doc.text("NEXA BIZMASTER - SALES AUDIT", 130, 18);
-
+        const { jsPDF } = window.jspdf; const doc = new jsPDF();
         let total = 0;
-        const body = allData.map(i => {
-            total += i.amt;
-            return [i.date, i.name, i.addr, i.app, i.status, `Rs. ${i.amt}`];
-        });
-
-        doc.autoTable({
-            startY: 40,
-            head: [['Date', 'Client', 'Location', 'Item', 'Status', 'Amount']],
-            body: body,
-            headStyles: { fillColor: [14, 165, 233] }
-        });
-
-        doc.setTextColor(15, 23, 42); doc.setFontSize(14); doc.setFont("helvetica", "bold");
-        doc.text(`GRAND TOTAL: Rs. ${total.toLocaleString()}`, 130, doc.lastAutoTable.finalY + 15);
-        doc.save(`BizMaster_Report_${fN}.pdf`);
+        const body = allData.map(i => { total += i.amt; return [i.date, i.name, i.app, i.status, i.amt]; });
+        doc.text(document.getElementById('fName').value, 14, 15);
+        doc.autoTable({ startY: 25, head: [['Date', 'Client', 'Item', 'Status', 'Amt']], body: body });
+        doc.text(`GRAND TOTAL: Rs. ${total}`, 14, doc.lastAutoTable.finalY + 10);
+        doc.save("Audit_Report.pdf");
     }
 
     async function genInvoice(id) {
         const i = allData.find(x => x.id === id);
-        const { jsPDF } = window.jspdf;
-        const doc = new jsPDF();
-        const fN = document.getElementById('fName').value;
-        const fA = document.getElementById('fAddr').value;
-
-        doc.setFillColor(14, 165, 233); doc.rect(0, 0, 210, 40, 'F');
-        doc.setTextColor(255); doc.setFontSize(24); doc.text(fN, 15, 22);
-        doc.setFontSize(10); doc.text(fA, 15, 30);
-        doc.setFontSize(16); doc.text("TAX INVOICE", 155, 22);
-
-        doc.setTextColor(40); doc.setFontSize(11);
-        doc.text(`Bill To: ${i.name}`, 15, 55);
-        doc.text(`Location: ${i.addr}`, 15, 62);
-        doc.text(`Date: ${i.date}`, 155, 55);
-
-        doc.autoTable({
-            startY: 75,
-            head: [['Description', 'Payment Mode', 'Total']],
-            body: [[`Software/Service: ${i.app}`, i.status, `Rs. ${i.amt}`]],
-            headStyles: { fillColor: [15, 23, 42] },
-            theme: 'grid'
-        });
-
-        doc.setFontSize(14); doc.setFont("helvetica", "bold");
-        doc.text(`Net Amount: Rs. ${i.amt.toLocaleString()}`, 145, doc.lastAutoTable.finalY + 15);
-        doc.save(`Invoice_${i.name}.pdf`);
+        const { jsPDF } = window.jspdf; const doc = new jsPDF();
+        doc.setFontSize(20); doc.text(document.getElementById('fName').value, 15, 20);
+        doc.setFontSize(10); doc.text(document.getElementById('fAddr').value, 15, 28);
+        doc.autoTable({ startY: 40, head: [['Description', 'Status', 'Total']], body: [[i.app, i.status, `Rs. ${i.amt}`]] });
+        doc.save(`Bill_${i.name}.pdf`);
     }
 
     function edit(id) {
-        const item = allData.find(i => i.id === id);
+        const item = allData.find(x => x.id === id);
         document.getElementById('editId').value = item.id;
         document.getElementById('cName').value = item.name;
-        document.getElementById('cLoc').value = item.addr;
         document.getElementById('cApp').value = item.app;
-        document.getElementById('cPhone').value = item.phone;
         document.getElementById('cAmt').value = item.amt;
         document.getElementById('cDate').value = item.date;
-        document.getElementById('cStatus').value = item.status;
-        document.getElementById('addBtn').innerText = "UPDATE RECORD ⚡";
         tab('Home', document.querySelectorAll('.tab')[0]);
     }
 
-    function del(id) { if(confirm("Permanently delete this record?")) db.transaction("sales","readwrite").objectStore("sales").delete(id).oncomplete = load; }
     function importData(e) {
         const reader = new FileReader();
         reader.onload = ev => {
             const data = JSON.parse(ev.target.result);
             const tx = db.transaction("sales", "readwrite");
             data.forEach(i => { delete i.id; tx.objectStore("sales").add(i); });
-            tx.oncomplete = () => { load(); alert("Data Restored Successfully!"); };
+            tx.oncomplete = () => load();
         };
         reader.readAsText(e.target.files[0]);
     }
-    function setG() { let g = prompt("Monthly Revenue Goal (₹):", goal); if(g) { goal = g; localStorage.setItem('nGoal', g); stats(); } }
+
+    function toggleTheme() {
+        const mode = document.body.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
+        document.body.setAttribute('data-theme', mode);
+        localStorage.setItem('theme', mode);
+    }
+    function setG() { let g = prompt("Goal:", goal); if(g) { goal = g; localStorage.setItem('biz_goal', g); stats(); } }
     function reset() { 
-        ['editId','cName','cLoc','cApp','cAmt'].forEach(id => document.getElementById(id).value = "");
-        document.getElementById('cPhone').value = "+91";
-        document.getElementById('addBtn').innerText = "SAVE RECORD 🚀";
+        ['editId','cName','cApp','cAmt'].forEach(i => document.getElementById(i).value = "");
         document.getElementById('cDate').valueAsDate = new Date();
     }
     document.getElementById('cDate').valueAsDate = new Date();
