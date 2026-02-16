@@ -1,76 +1,312 @@
 <!DOCTYPE html>
-<html lang="hi">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Khagesh AI Nexa | Digital Agency</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Nexa BizMaster | Powered by Khagesh ai-nexa</title>
+    <script src="https://cdn.jsdelivr.net/npm/jspdf@2.5.1/dist/jspdf.umd.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/jspdf-autotable@3.5.23/dist/jspdf.plugin.autotable.min.js"></script>
     <style>
-        body { background: #020617; color: white; font-family: 'Segoe UI', sans-serif; }
-        .glass-card { background: rgba(255, 255, 255, 0.03); backdrop-filter: blur(15px); border: 1px solid rgba(255,255,255,0.1); border-radius: 30px; }
-        .gold-gradient { background: linear-gradient(45deg, #fbbf24, #f59e0b); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
-        .btn-call { background: #2563eb; }
-        .btn-wa { background: #22c55e; }
-        .btn-mail { background: #ea4335; }
-        .price-tag { color: #fbbf24; font-weight: bold; font-size: 11px; }
+        :root { --p: #0ea5e9; --bg: #0f172a; --card: #1e293b; --text: #f1f5f9; --border: #334155; }
+        [data-theme="light"] { --bg: #f8fafc; --card: #ffffff; --text: #1e293b; --border: #e2e8f0; }
+        * { box-sizing: border-box; font-family: 'Segoe UI', system-ui; margin: 0; padding: 0; transition: 0.2s; }
+        body { background: var(--bg); color: var(--text); padding: 10px; padding-bottom: 85px; }
+        .ceo-header { text-align: center; margin-bottom: 15px; padding: 20px; border-radius: 20px; background: linear-gradient(135deg, #0ea5e9, #38bdf8); color: white; position: relative; box-shadow: 0 10px 25px rgba(0,0,0,0.2); }
+        .theme-toggle { position: absolute; top: 10px; right: 15px; font-size: 20px; cursor: pointer; }
+        .ceo-name { font-size: 22px; font-weight: 800; border: none; background: transparent; color: white; text-align: center; width: 100%; outline: none; text-transform: uppercase; letter-spacing: 1px; }
+        .ceo-addr { font-size: 11px; opacity: 0.9; border: none; background: transparent; color: white; text-align: center; width: 100%; outline: none; margin-top: 5px; }
+        .glass-card { background: var(--card); border: 1px solid var(--border); border-radius: 18px; padding: 18px; margin-bottom: 15px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); }
+        .prog-bg { background: rgba(255,255,255,0.1); height: 10px; border-radius: 5px; margin: 10px 0; overflow: hidden; }
+        .prog-fill { background: var(--p); height: 100%; width: 0%; border-radius: 5px; box-shadow: 0 0 10px var(--p); }
+        .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+        .full { grid-column: span 2; }
+        input, select { width: 100%; padding: 12px; border: 1px solid var(--border); border-radius: 10px; font-size: 14px; background: var(--card); color: var(--text); outline: none; }
+        .main-btn { width: 100%; background: var(--p); color: white; border: none; padding: 15px; border-radius: 12px; font-weight: bold; cursor: pointer; margin-top: 10px; box-shadow: 0 5px 15px rgba(14,165,233,0.3); }
+        .wa-btn { background: #25d366; color: white; border: none; padding: 6px 12px; border-radius: 8px; font-size: 11px; font-weight: bold; margin-top: 5px; cursor: pointer; }
+        .bill-btn { background: #6366f1; color: white; border: none; padding: 6px 12px; border-radius: 8px; font-size: 11px; font-weight: bold; margin-top: 5px; cursor: pointer; }
+        .tab-bar { position: fixed; bottom: 0; left: 0; width: 100%; background: var(--card); display: flex; border-top: 1px solid var(--border); height: 70px; z-index: 1000; }
+        .tab { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; font-size: 11px; font-weight: 700; color: #94a3b8; }
+        .tab.active { color: var(--p); border-top: 3px solid var(--p); background: rgba(14,165,233,0.05); }
+        .panel { display: none; }
+        .panel.active { display: block; }
+        .ledger-item { display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--border); padding: 15px 0; }
+        .stat-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 15px; }
+        .stat-card { padding: 10px; border-radius: 12px; text-align: center; background: rgba(14,165,233,0.1); border: 1px solid var(--border); }
     </style>
 </head>
-<body class="p-4 flex flex-col items-center min-h-screen">
+<body data-theme="dark">
 
-    <div class="glass-card w-full max-w-sm p-6 text-center shadow-2xl mt-4">
-        <div id="clock" class="text-[10px] font-mono text-amber-500 mb-4 tracking-widest opacity-80">00:00:00 AM</div>
+<div class="ceo-header">
+    <div class="theme-toggle" onclick="toggleTheme()">🌓</div>
+    <div style="font-size: 10px; font-weight: bold; opacity: 0.8; margin-bottom: 5px;">NEXA BIZMASTER</div>
+    <input type="text" id="fName" class="ceo-name" placeholder="BUSINESS NAME" oninput="saveC()">
+    <input type="text" id="fAddr" class="ceo-addr" placeholder="Business Address & Contact" oninput="saveC()">
+</div>
 
-        <div class="w-16 h-16 bg-amber-500 rounded-2xl flex items-center justify-center mx-auto mb-3 shadow-lg shadow-amber-500/30">
-            <i class="fas fa-bolt text-2xl text-white"></i>
+<div style="display:flex; gap:10px; margin-bottom:15px;">
+    <button onclick="document.getElementById('imp').click()" style="flex:1; padding:12px; border-radius:12px; border:1px solid var(--border); background:var(--card); color:var(--text); font-weight:bold;">📥 Import</button>
+    <button onclick="forceExport()" id="exportBtn" style="flex:1; padding:12px; border-radius:12px; border:none; background:#0f172a; color:white; font-weight:bold;">📄 Audit Report</button>
+    <input type="file" id="imp" hidden onchange="importData(event)">
+</div>
+
+<div id="Home" class="panel active">
+    <div class="glass-card">
+        <div style="display:flex; justify-content: space-between;">
+            <span>Revenue Target</span>
+            <span id="pVal" style="color:var(--p)">0%</span>
         </div>
-
-        <h1 class="text-2xl font-black tracking-tight mb-1 uppercase">KHAGESH <span class="gold-gradient">AI NEXA</span></h1>
-        <p class="text-[9px] text-gray-500 tracking-[3px] uppercase font-bold mb-6">Software & Digital Hub | Delhi</p>
-
-        <div class="space-y-3 text-left mb-6">
-            <div class="bg-white/5 p-3 rounded-xl flex items-center justify-between">
-                <span class="text-sm"><i class="fas fa-code text-blue-400 mr-2"></i> Web Apps</span>
-                <span class="price-tag">₹999+</span>
-            </div>
-            <div class="bg-white/5 p-3 rounded-xl flex items-center justify-between">
-                <span class="text-sm"><i class="fas fa-id-card text-emerald-400 mr-2"></i> ABHA / PAN Card</span>
-                <span class="price-tag">₹49+</span>
-            </div>
-            <div class="bg-white/5 p-3 rounded-xl flex items-center justify-between">
-                <span class="text-sm"><i class="fas fa-image text-pink-400 mr-2"></i> Poster/Social Post</span>
-                <span class="price-tag">₹99+</span>
-            </div>
-        </div>
-
-        <div class="grid grid-cols-2 gap-3 mb-3">
-            <a href="tel:8882737014" class="btn-call py-3 rounded-xl font-bold flex items-center justify-center gap-2 text-sm">
-                <i class="fas fa-phone-alt"></i> Call
-            </a>
-            <a href="https://wa.me/918882737014" class="btn-wa py-3 rounded-xl font-bold flex items-center justify-center gap-2 text-sm">
-                <i class="fab fa-whatsapp"></i> WhatsApp
-            </a>
-        </div>
-        <a href="mailto:YOUR_EMAIL@gmail.com" class="btn-mail w-full py-3 rounded-xl font-bold flex items-center justify-center gap-2 text-sm mb-6">
-            <i class="fas fa-envelope"></i> Send Email
-        </a>
-
-        <div class="border-t border-white/10 pt-4">
-            <p class="text-[10px] text-gray-500 font-bold uppercase mb-3">Sample Projects</p>
-            <div class="space-y-2">
-                <a href="YOUR_KHATA_APP_LINK" class="block w-full py-2 bg-white/5 hover:bg-white/10 rounded-lg text-xs font-medium">1. Digital Khata App</a>
-                <a href="YOUR_OPTICAL_APP_LINK" class="block w-full py-2 bg-white/5 hover:bg-white/10 rounded-lg text-xs font-medium">2. Optical Pro Eye-Test App</a>
-            </div>
+        <div class="prog-bg"><div id="pBar" class="prog-fill"></div></div>
+        <div style="display:flex; justify-content: space-between; font-size: 12px;">
+            <span>Paid: <b id="currEarned">₹0</b></span>
+            <span onclick="setG()" style="cursor:pointer; color:var(--p)">Goal: <b id="gVal">₹0</b> ⚙️</span>
         </div>
     </div>
 
-    <script>
-        function updateClock() {
-            const now = new Date();
-            document.getElementById('clock').innerText = now.toLocaleTimeString();
-        }
-        setInterval(updateClock, 1000);
-        updateClock();
-    </script>
+    <div class="glass-card">
+        <h4 style="margin-bottom:12px; color:var(--p)">New Sale Entry</h4>
+        <div class="form-grid">
+            <input type="hidden" id="editId">
+            <input type="text" id="cName" placeholder="Client Name" class="full">
+            <input type="text" id="cLoc" placeholder="Client Location">
+            <input type="text" id="cApp" placeholder="Product/Service Name">
+            <input type="tel" id="cPhone" value="+91" placeholder="WhatsApp Number">
+            <input type="number" id="cAmt" placeholder="Amount (₹)">
+            <input type="date" id="cDate">
+            <select id="cStatus" class="full">
+                <option value="Paid">Paid</option>
+                <option value="Pending">Pending</option>
+            </select>
+            <button id="addBtn" class="main-btn full" onclick="save()">SAVE RECORD 🚀</button>
+        </div>
+    </div>
+</div>
+
+<div id="Ledger" class="panel">
+    <div class="glass-card">
+        <input type="text" id="search" placeholder="Search by name or product..." oninput="render()" style="width:100%; padding:12px; border-radius:12px; border:1px solid var(--border); margin-bottom:10px;">
+        <div id="list"></div>
+    </div>
+</div>
+
+<div id="Billing" class="panel">
+    <div class="glass-card">
+        <h4 style="margin-bottom:10px;">Monthly Billing Center</h4>
+        <select id="monthFilter" onchange="renderBilling()" style="margin-bottom:15px; width:100%;">
+            <option value="all">View All Time</option>
+            <option value="01">January</option><option value="02">February</option>
+            <option value="03">March</option><option value="04">April</option>
+            <option value="05">May</option><option value="06">June</option>
+            <option value="07">July</option><option value="08">August</option>
+            <option value="09">September</option><option value="10">October</option>
+            <option value="11">November</option><option value="12">December</option>
+        </select>
+        <div class="stat-grid">
+            <div class="stat-card"><small>Received</small><br><b id="mPaid" style="color:#16a34a">₹0</b></div>
+            <div class="stat-card"><small>Outstanding</small><br><b id="mPend" style="color:#ef4444">₹0</b></div>
+        </div>
+        <div id="billList"></div>
+    </div>
+</div>
+
+<div class="tab-bar">
+    <div class="tab active" onclick="tab('Home', this)">🏠 HOME</div>
+    <div class="tab" onclick="tab('Ledger', this)">📑 LEDGER</div>
+    <div class="tab" onclick="tab('Billing', this)">🧾 BILLING</div>
+</div>
+
+<script>
+    let db, allData = [], goal = localStorage.getItem('nGoal') || 50000;
+    
+    // CEO & Theme Setup
+    document.getElementById('fName').value = localStorage.getItem('cN') || "KHAGESH AI-NEXA";
+    document.getElementById('fAddr').value = localStorage.getItem('cA') || "Delhi, India | 8882737014";
+    function saveC(){ localStorage.setItem('cN', document.getElementById('fName').value); localStorage.setItem('cA', document.getElementById('fAddr').value); }
+    if(localStorage.getItem('theme') === 'light') document.body.setAttribute('data-theme', 'light');
+    function toggleTheme() {
+        const mode = document.body.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
+        document.body.setAttribute('data-theme', mode);
+        localStorage.setItem('theme', mode);
+    }
+
+    // DB Init (Nexa BizMaster Core)
+    const req = indexedDB.open("Nexa_BizMaster_Permanent", 1);
+    req.onupgradeneeded = e => e.target.result.createObjectStore("sales", {keyPath:"id", autoIncrement:true});
+    req.onsuccess = e => { db = e.target.result; load(); };
+
+    function tab(id, el) {
+        document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
+        document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+        document.getElementById(id).classList.add('active');
+        el.classList.add('active');
+        if(id === 'Billing') renderBilling();
+    }
+
+    function save() {
+        const id = document.getElementById('editId').value;
+        const data = {
+            name: document.getElementById('cName').value,
+            addr: document.getElementById('cLoc').value,
+            app: document.getElementById('cApp').value || 'Service',
+            phone: document.getElementById('cPhone').value,
+            amt: parseFloat(document.getElementById('cAmt').value) || 0,
+            date: document.getElementById('cDate').value,
+            status: document.getElementById('cStatus').value
+        };
+        if(!data.name) return alert("Please enter Client Name");
+        const tx = db.transaction("sales", "readwrite");
+        if(id) { data.id = parseInt(id); tx.objectStore("sales").put(data); } 
+        else { tx.objectStore("sales").add(data); }
+        tx.oncomplete = () => { load(); reset(); };
+    }
+
+    function load() {
+        db.transaction("sales").objectStore("sales").getAll().onsuccess = e => {
+            allData = e.target.result.reverse();
+            render(); stats();
+        };
+    }
+
+    function stats() {
+        let p = 0; allData.forEach(i => { if(i.status === 'Paid') p += i.amt; });
+        document.getElementById('gVal').innerText = `₹${goal}`;
+        document.getElementById('currEarned').innerText = `₹${p}`;
+        let perc = Math.min((p / goal) * 100, 100).toFixed(1);
+        document.getElementById('pBar').style.width = perc + "%";
+        document.getElementById('pVal').innerText = perc + "%";
+    }
+
+    function render() {
+        const q = document.getElementById('search').value.toLowerCase();
+        const list = document.getElementById('list');
+        list.innerHTML = "";
+        allData.filter(i => i.name.toLowerCase().includes(q) || i.app.toLowerCase().includes(q)).forEach(i => {
+            const div = document.createElement('div');
+            div.className = "ledger-item";
+            div.innerHTML = `<div><b>${i.name}</b><br><small style="opacity:0.6">${i.app} | ${i.date}</small></div>
+                <div style="text-align:right"><span style="color:${i.status==='Paid'?'#16a34a':'#d97706'}; font-weight:800;">₹${i.amt}</span><br>
+                <button style="border:none;background:none;color:var(--p);font-size:11px" onclick="edit(${i.id})">Edit</button> | 
+                <button style="border:none;background:none;color:red;font-size:11px" onclick="del(${i.id})">Del</button></div>`;
+            list.appendChild(div);
+        });
+    }
+
+    function renderBilling() {
+        const m = document.getElementById('monthFilter').value;
+        const list = document.getElementById('billList');
+        let p = 0, d = 0;
+        list.innerHTML = "";
+        allData.filter(i => m === 'all' || i.date.split('-')[1] === m).forEach(i => {
+            if(i.status === 'Paid') p += i.amt; else d += i.amt;
+            const div = document.createElement('div');
+            div.className = "ledger-item";
+            div.innerHTML = `<div><b>${i.name}</b><br><small>${i.app} | ${i.date}</small></div>
+                <div style="text-align:right"><button class="bill-btn" onclick="genInvoice(${i.id})">📄 Invoice</button><br>
+                <button class="wa-btn" onclick="wa(${i.id})">💬 Share</button></div>`;
+            list.appendChild(div);
+        });
+        document.getElementById('mPaid').innerText = `₹${p}`;
+        document.getElementById('mPend').innerText = `₹${d}`;
+    }
+
+    function wa(id) {
+        const i = allData.find(x => x.id === id);
+        const msg = `*Invoice from ${document.getElementById('fName').value}*\nHello ${i.name}, your bill for ${i.app} is ₹${i.amt}.\nStatus: ${i.status}\nThank you!`;
+        window.open(`https://wa.me/${i.phone.replace('+','')}/?text=${encodeURIComponent(msg)}`);
+    }
+
+    async function forceExport() {
+        const { jsPDF } = window.jspdf;
+        const doc = new jsPDF();
+        const fN = document.getElementById('fName').value;
+        const fA = document.getElementById('fAddr').value;
+
+        doc.setFillColor(15, 23, 42); doc.rect(0, 0, 210, 35, 'F');
+        doc.setTextColor(255); doc.setFontSize(20); doc.text(fN, 14, 18);
+        doc.setFontSize(9); doc.text(fA, 14, 26);
+        doc.setFontSize(12); doc.text("NEXA BIZMASTER - SALES AUDIT", 130, 18);
+
+        let total = 0;
+        const body = allData.map(i => {
+            total += i.amt;
+            return [i.date, i.name, i.addr, i.app, i.status, `Rs. ${i.amt}`];
+        });
+
+        doc.autoTable({
+            startY: 40,
+            head: [['Date', 'Client', 'Location', 'Item', 'Status', 'Amount']],
+            body: body,
+            headStyles: { fillColor: [14, 165, 233] }
+        });
+
+        doc.setTextColor(15, 23, 42); doc.setFontSize(14); doc.setFont("helvetica", "bold");
+        doc.text(`GRAND TOTAL: Rs. ${total.toLocaleString()}`, 130, doc.lastAutoTable.finalY + 15);
+        doc.save(`BizMaster_Report_${fN}.pdf`);
+    }
+
+    async function genInvoice(id) {
+        const i = allData.find(x => x.id === id);
+        const { jsPDF } = window.jspdf;
+        const doc = new jsPDF();
+        const fN = document.getElementById('fName').value;
+        const fA = document.getElementById('fAddr').value;
+
+        doc.setFillColor(14, 165, 233); doc.rect(0, 0, 210, 40, 'F');
+        doc.setTextColor(255); doc.setFontSize(24); doc.text(fN, 15, 22);
+        doc.setFontSize(10); doc.text(fA, 15, 30);
+        doc.setFontSize(16); doc.text("TAX INVOICE", 155, 22);
+
+        doc.setTextColor(40); doc.setFontSize(11);
+        doc.text(`Bill To: ${i.name}`, 15, 55);
+        doc.text(`Location: ${i.addr}`, 15, 62);
+        doc.text(`Date: ${i.date}`, 155, 55);
+
+        doc.autoTable({
+            startY: 75,
+            head: [['Description', 'Payment Mode', 'Total']],
+            body: [[`Software/Service: ${i.app}`, i.status, `Rs. ${i.amt}`]],
+            headStyles: { fillColor: [15, 23, 42] },
+            theme: 'grid'
+        });
+
+        doc.setFontSize(14); doc.setFont("helvetica", "bold");
+        doc.text(`Net Amount: Rs. ${i.amt.toLocaleString()}`, 145, doc.lastAutoTable.finalY + 15);
+        doc.save(`Invoice_${i.name}.pdf`);
+    }
+
+    function edit(id) {
+        const item = allData.find(i => i.id === id);
+        document.getElementById('editId').value = item.id;
+        document.getElementById('cName').value = item.name;
+        document.getElementById('cLoc').value = item.addr;
+        document.getElementById('cApp').value = item.app;
+        document.getElementById('cPhone').value = item.phone;
+        document.getElementById('cAmt').value = item.amt;
+        document.getElementById('cDate').value = item.date;
+        document.getElementById('cStatus').value = item.status;
+        document.getElementById('addBtn').innerText = "UPDATE RECORD ⚡";
+        tab('Home', document.querySelectorAll('.tab')[0]);
+    }
+
+    function del(id) { if(confirm("Permanently delete this record?")) db.transaction("sales","readwrite").objectStore("sales").delete(id).oncomplete = load; }
+    function importData(e) {
+        const reader = new FileReader();
+        reader.onload = ev => {
+            const data = JSON.parse(ev.target.result);
+            const tx = db.transaction("sales", "readwrite");
+            data.forEach(i => { delete i.id; tx.objectStore("sales").add(i); });
+            tx.oncomplete = () => { load(); alert("Data Restored Successfully!"); };
+        };
+        reader.readAsText(e.target.files[0]);
+    }
+    function setG() { let g = prompt("Monthly Revenue Goal (₹):", goal); if(g) { goal = g; localStorage.setItem('nGoal', g); stats(); } }
+    function reset() { 
+        ['editId','cName','cLoc','cApp','cAmt'].forEach(id => document.getElementById(id).value = "");
+        document.getElementById('cPhone').value = "+91";
+        document.getElementById('addBtn').innerText = "SAVE RECORD 🚀";
+        document.getElementById('cDate').valueAsDate = new Date();
+    }
+    document.getElementById('cDate').valueAsDate = new Date();
+</script>
 </body>
-</html>
+    </html>
+    
